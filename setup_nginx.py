@@ -78,3 +78,6 @@ server {{
         subprocess.run(["sudo", "service", "nginx", "restart"], check=True)
     except subprocess.CalledProcessError as e:
         print(f"An error occurred while restarting nginx: {e}")
+
+if __name__ == "__main__":
+    setup_nginx()
