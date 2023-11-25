@@ -37,17 +37,29 @@ server {{
 }}
     """
 
+
+    nginx_filepath = "/path/to/nginx.conf"
+    nginx_config = "your nginx configuration"
+
     try:
-        with open(nginx_filepath, "w", encoding="utf-8") as f:
-            f.write(nginx_config)
+        # Open a subprocess running sudo tee to write to the file with elevated privileges
+        process = subprocess.Popen(['sudo', 'tee', nginx_filepath], stdin=subprocess.PIPE, universal_newlines=True)
+        process.communicate(nginx_config)
+    
+        if process.returncode == 0:
+            print_color("The default configuration file has been written successfully.", "32")
+        else:
+            raise Exception(f"tee command returned non-zero exit status {process.returncode}")
+    
+    except PermissionError as e:
         print_color(
-            "The default configuration file has been written successfully.", "32"
+            "Permission denied: Please run this script with elevated privileges.", "31"
         )
     except Exception as e:
         print_color(
-            f"An error occurred while writing the default configuration file: {e}",
-            "31",
+            f"An error occurred while writing the default configuration file: {e}", "31"
         )
+
 
     try:
         subprocess.run(["sudo", "service", "nginx", "restart"], check=True)
