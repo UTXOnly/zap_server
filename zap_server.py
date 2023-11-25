@@ -1,10 +1,8 @@
-# Standard library imports
 import json
 import logging
 import os
 import socket
 
-# Related third-party imports
 import requests
 import socks
 from dotenv import load_dotenv
