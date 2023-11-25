@@ -1,5 +1,6 @@
 ## Introduction
-A server that allows you recieve zaps on nostr, forwarded to your lightning node running on TOR.
+A [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) server that allows you recieve zaps on nostr, forwarded to your lightning node running on TOR. This server allows you to create a [Lightning Address](https://github.com/andrerfneves/lightning-address/blob/master/DIY.md) by slecting a username and using a your own domain.
+
 
 ## How it works?
 
@@ -9,7 +10,7 @@ A server that allows you recieve zaps on nostr, forwarded to your lightning node
 ## Prerequisites 
 * An Ubuntu server reachable by a public IP (tested on 22.04 amd64 host server )
 * Your own domain
-* A Lightning node running LND
+* A Lightning node running [LND](https://github.com/lightningnetwork/lnd/tree/master)
 
 ## What these scripts do
 * Installs and configures `nginx` reverse proxy server
@@ -34,3 +35,15 @@ nano .env
 ```
 python3 menu.py
 ```
+### Using the command line interface (CLI)
+
+* Option 1 runs the server setup script, downloads dependencies, installs and configures the NGINX proxy server
+* Option 2 starts the Flask server to begin responding to clients requests for lightning invoices
+* Option 3 stops the Flask server (Will not respond to requests for invoices)
+* Option 4 exits the CLI menu
+
+## To Do
+- [] Update `.env` file permissions, potentially encrypt?
+- [] Add UFW firewall rules
+- [] Improve error handling
+- [] Add unit tests
