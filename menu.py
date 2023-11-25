@@ -1,5 +1,4 @@
 import subprocess
-import os
 
 
 # Function to print colored text to the console

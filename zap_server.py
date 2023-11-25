@@ -94,7 +94,6 @@ def lnurl_response():
     metadata = f'{{"text/identifier": "{identity}@{DOMAIN}"}}'
     callback_url = f"https://{DOMAIN}/lnurl-pay"
 
-
     comment_allowed = 200  # Replace with # of char allowed in comment
     allow_nostr = "true"
     nostr_pubkey = HEX_PUBKEY
