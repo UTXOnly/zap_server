@@ -18,6 +18,7 @@ def install_linux_packages():
             "-y",
             "python3-pip",
             "nginx",
+            "tor",
             "tmux",
             "certbot",
             "python3.10-venv",
