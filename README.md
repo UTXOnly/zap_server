@@ -1,5 +1,5 @@
 ## Introduction
-A [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) server that allows you recieve zaps on nostr, forwarded to your lightning node running on TOR. This server allows you to create a [Lightning Address](https://github.com/andrerfneves/lightning-address/blob/master/DIY.md) by slecting a username and using a your own domain.
+A [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) server that allows you recieve zaps on nostr, forwarded to your lightning node running on Tor. This server allows you to create a [Lightning Address](https://github.com/andrerfneves/lightning-address/blob/master/DIY.md) by slecting a username and using a your own domain.
 
 #### Tradeoffs
 * You recieve zaps directly to you lightning node
@@ -11,8 +11,7 @@ A [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) server that
 
 ## How it works?
 
-![zap_server (2)](https://github.com/UTXOnly/zap_server/assets/49233513/f254c464-4dba-42b7-83cc-4647e3d20bab)
-
+![zap_server (1)](https://github.com/UTXOnly/zap_server/assets/49233513/2c36d404-97ce-47ae-b9ad-b63bd4de9246)
 
 
 
@@ -64,6 +63,7 @@ NGINX_FILE_PATH=/etc/nginx/sites-available/default # Dont change this
 ```
 python3 menu.py
 ```
+* `menu.py` is the main process used to control the server 
 ![Screenshot from 2023-11-24 23-49-04](https://github.com/UTXOnly/zap_server/assets/49233513/afdc66de-3213-403d-af41-c638bf4be265)
 
 ### Using the command line interface (CLI)
@@ -83,3 +83,4 @@ python3 menu.py
 - [] Add UFW firewall rules
 - [] Improve error handling
 - [] Add unit tests
+- [] Add Wireguard VPN tunnel to connect to node
