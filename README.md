@@ -11,7 +11,8 @@ A [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) server that
 
 ## How it works?
 
-![zap_server](https://github.com/UTXOnly/zap_server/assets/49233513/768fe50f-c677-48d4-af84-a18878b05aaa)
+![zap_server (1)](https://github.com/UTXOnly/zap_server/assets/49233513/2c36d404-97ce-47ae-b9ad-b63bd4de9246)
+
 
 
 ## Prerequisites 
