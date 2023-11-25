@@ -3,6 +3,9 @@ A server that allows you recieve zaps on nostr, forwarded to your lightning node
 
 ## How it works?
 
+![zap_server](https://github.com/UTXOnly/zap_server/assets/49233513/768fe50f-c677-48d4-af84-a18878b05aaa)
+
+
 ## Prerequisites 
 * An Ubuntu server reachable by a public IP (tested on 22.04 amd64 host server )
 * Your own domain
