@@ -43,7 +43,7 @@ def get_invoice(amount, description):
                 },
                 verify=False,
             )
-            response.raise_for_status()  # Raise an HTTPError for bad responses
+            response.raise_for_status()
             logger.debug(f"Get Invoice response is: {response}")
         invoice_data = response.json()
         logger.debug(f"Received invoice data: {invoice_data}")
