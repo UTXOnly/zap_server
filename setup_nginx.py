@@ -15,7 +15,7 @@ def setup_nginx():
     nginx_filepath = os.getenv("NGINX_FILE_PATH")
     if os.path.exists(nginx_filepath):
         try:
-            subprocess.run(["rm", nginx_filepath], check=True)
+            subprocess.run(["sudo", "rm", nginx_filepath], check=True)
             print_color("File removed successfully.", "32")
         except subprocess.CalledProcessError as e:
             print(f"An error occurred while removing the file: {e}")
