@@ -8,9 +8,9 @@ def print_color(text, color):
 
 
 def setup_nginx():
-    load_dotenv(override=True)
+    load_dotenv()
     contact = os.getenv("CONTACT")
-    domain_name = os.getenv("DOMAIN_NAME")
+    domain_name = os.getenv("DOMAIN")
     nginx_filepath = os.getenv("NGINX_FILE_PATH")
     nginx_config = f"""
 server {{
@@ -28,7 +28,7 @@ server {{
         proxy_http_version 1.1;
     }}
 }}
-"""
+    """
 
     if os.path.exists(nginx_filepath):
         print_color("The default configuration file already exists.", "31")
