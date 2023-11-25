@@ -29,6 +29,19 @@ git clone https://github.com/UTXOnly/zap_server.git
 nano .env
 ```
 
+* Example `.env` file:
+
+```
+LND_ONION_ADDRESS="14rgtc4yh2lzl4sdasty4ybnxwwmt6vg75vhrsaypgjmwpbasd423htde.onion" #Repalce with your LND onion address
+LND_TOR_PORT=8080 #Replace with your LND REST port (8080 is default you can most likely leave this as-is)
+LND_INVOICE_MACAROON_HEX="3FA9F5B7E8D2C4A1F3E5B9A7D6C8E2F0" #The HEX value for your LND invoice macaroon
+INTERNET_IDENTIFIER="<YOUR_NAME_OR_NYM_HERE>" ## Add the value on the left side of your LNURL identifier for example if your LNURL identifier is "nabismo@nostpypy.lol" you would add "nabismo" here
+HEX_PUBKEY="4503baa127bdfd0b054384dc5ba82cb0e2a8367cbdb0629179f00db1a34caacc"
+DOMAIN="<YOUR_DOMAIN>" # Do not include http:// or https:// , For example nostpy.lol
+CONTACT=<YOUR EMAIL ADDRESS> # Fr updates about TLC certificate expirt from Certbot
+NGINX_FILE_PATH=/etc/nginx/sites-available/default # Dont change this 
+```
+
 ### Setup the server
 
 * Start the CLI menu
@@ -43,6 +56,11 @@ python3 menu.py
 * Option 2 starts the Flask server to begin responding to clients requests for lightning invoices
 * Option 3 stops the Flask server (Will not respond to requests for invoices)
 * Option 4 exits the CLI menu
+
+### Additional Resources
+* [Creating a droplet on Digital Ocean ( A virtual Private Server)](https://docs.digitalocean.com/developer-center/onboarding-working-with-digitalocean-droplets/)
+* [Intial Ubuntu 22.04 server setup on Digital Ocean](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-22-04)
+
 
 ## To Do
 - [] Update `.env` file permissions, potentially encrypt?
