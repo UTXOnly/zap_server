@@ -7,11 +7,18 @@ def print_color(text, color):
     print(f"\033[1;{color}m{text}\033[0m")
 
 
+
 def setup_nginx():
     load_dotenv()
     contact = os.getenv("CONTACT")
     domain_name = os.getenv("DOMAIN")
     nginx_filepath = os.getenv("NGINX_FILE_PATH")
+    if os.path.exists(nginx_filepath):
+        try:
+            subprocess.run(["rm", nginx_filepath], check=True)
+            print_color("File removed successfully.", "32")
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred while removing the file: {e}")
     nginx_config = f"""
 server {{
     server_name {domain_name};
