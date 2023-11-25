@@ -1,6 +1,13 @@
 ## Introduction
 A [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) server that allows you recieve zaps on nostr, forwarded to your lightning node running on TOR. This server allows you to create a [Lightning Address](https://github.com/andrerfneves/lightning-address/blob/master/DIY.md) by slecting a username and using a your own domain.
 
+#### Tradeoffs
+* You recieve zaps directly to you lightning node
+  * You custody your own sats and don't need to worry about sweeping them from a custodial wallet or getting rug pulled by a custodian
+* You are creating invoices from your own lightning node and could potentially share information about your node (for example channel balances)
+* You must maintain sufficent inbound liquidity to recieve zaps and have some path between the sender's wallet and your node
+* You are storing an [invoice.macaroon](https://docs.lightning.engineering/lightning-network-tools/lnd/macaroons#:~:text=invoice.macaroon,write%3B%20onchain%3A%20read) on your zap server which can read and create invoices on your node, protect this!
+
 
 ## How it works?
 
