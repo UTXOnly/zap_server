@@ -26,6 +26,13 @@ A [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) server that
 
 ## What you need to do
 
+* Getting your LND REST information and `invoice.macaroon`, this example shows getting this information from a [Raspiblitz](https://github.com/raspiblitz/raspiblitz) node.
+
+![Screen Recording 2023-11-25 at 12 44 26 AM](https://github.com/UTXOnly/zap_server/assets/49233513/34f16443-74f6-46f5-ab35-999ec6b46697)
+
+![Image 2023-11-25 at 12 45 17 AM](https://github.com/UTXOnly/zap_server/assets/49233513/e665c34c-a9a4-4756-8a31-f84ec8b6a152)
+
+
 * Clone the repository
 ```
 git clone https://github.com/UTXOnly/zap_server.git
