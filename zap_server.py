@@ -1,11 +1,15 @@
-from flask import Flask, jsonify, request
+# Standard library imports
 import json
+import logging
+import os
+import socket
+
+# Related third-party imports
 import requests
 import socks
-import socket
-import logging
 from dotenv import load_dotenv
-import os
+from flask import Flask, jsonify, request
+
 
 
 app = Flask(__name__)

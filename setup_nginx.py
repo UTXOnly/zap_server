@@ -7,7 +7,6 @@ def print_color(text, color):
     print(f"\033[1;{color}m{text}\033[0m")
 
 
-
 def setup_nginx():
     load_dotenv()
     contact = os.getenv("CONTACT")
@@ -16,7 +15,7 @@ def setup_nginx():
     if os.path.exists(nginx_filepath):
         try:
             subprocess.run(["sudo", "rm", nginx_filepath], check=True)
-            print_color("File removed successfully.", "32")
+            print_color("NGINX file removed successfully.", "32")
         except subprocess.CalledProcessError as e:
             print(f"An error occurred while removing the file: {e}")
     nginx_config = f"""
@@ -39,14 +38,22 @@ server {{
 
     try:
         # Open a subprocess running sudo tee to write to the file with elevated privileges
-        process = subprocess.Popen(['sudo', 'tee', nginx_filepath], stdin=subprocess.PIPE, universal_newlines=True)
+        process = subprocess.Popen(
+            ["sudo", "tee", nginx_filepath],
+            stdin=subprocess.PIPE,
+            universal_newlines=True,
+        )
         process.communicate(nginx_config)
-    
+
         if process.returncode == 0:
-            print_color("The default configuration file has been written successfully.", "32")
+            print_color(
+                "The default configuration file has been written successfully.", "32"
+            )
         else:
-            raise Exception(f"tee command returned non-zero exit status {process.returncode}")
-    
+            raise Exception(
+                f"tee command returned non-zero exit status {process.returncode}"
+            )
+
     except PermissionError as e:
         print_color(
             "Permission denied: Please run this script with elevated privileges.", "31"
@@ -55,7 +62,6 @@ server {{
         print_color(
             f"An error occurred while writing the default configuration file: {e}", "31"
         )
-
 
     try:
         subprocess.run(["sudo", "service", "nginx", "restart"], check=True)
@@ -90,6 +96,7 @@ server {{
         subprocess.run(["sudo", "service", "nginx", "restart"], check=True)
     except subprocess.CalledProcessError as e:
         print(f"An error occurred while restarting nginx: {e}")
+
 
 if __name__ == "__main__":
     setup_nginx()
