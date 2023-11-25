@@ -12,7 +12,7 @@ def setup_server():
         subprocess.run(["python3", "setup_env.py"], check=True)
         subprocess.run(["python3", "-m", "venv", "zap_venv"], check=True)
         activate_cmd = ". zap_venv/bin/activate && "
-        commands = ["sudo python setup_nginx.py"]
+        commands = ["python setup_nginx.py"]
         for cmd in commands:
             subprocess.run(["bash", "-c", activate_cmd + cmd], check=True)
     except subprocess.CalledProcessError as e:
