@@ -37,10 +37,6 @@ server {{
 }}
     """
 
-
-    nginx_filepath = "/path/to/nginx.conf"
-    nginx_config = "your nginx configuration"
-
     try:
         # Open a subprocess running sudo tee to write to the file with elevated privileges
         process = subprocess.Popen(['sudo', 'tee', nginx_filepath], stdin=subprocess.PIPE, universal_newlines=True)
