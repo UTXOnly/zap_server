@@ -35,6 +35,8 @@ nano .env
 ```
 python3 menu.py
 ```
+![Screenshot from 2023-11-24 23-49-04](https://github.com/UTXOnly/zap_server/assets/49233513/afdc66de-3213-403d-af41-c638bf4be265)
+
 ### Using the command line interface (CLI)
 
 * Option 1 runs the server setup script, downloads dependencies, installs and configures the NGINX proxy server
