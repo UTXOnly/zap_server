@@ -6,6 +6,7 @@ import socket
 import requests
 import socks
 from dotenv import load_dotenv
+from ddtrace import tracer, patch_all
 from flask import Flask, jsonify, request
 
 
@@ -13,6 +14,9 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 load_dotenv()
+
+tracer.configure(hostname='127.0.0.1', port=8126)
+patch_all()
 
 LND_ONION_ADDRESS = os.getenv("LND_ONION_ADDRESS")
 LND_TOR_PORT = int(os.getenv("LND_TOR_PORT"))
