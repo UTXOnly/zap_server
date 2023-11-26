@@ -17,12 +17,13 @@ A [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) server that
 
 
 ## Prerequisites 
-* An Ubuntu server reachable by a public IP (tested on 22.04 amd64 host server )
+* An Linux server reachable by a public IP (tested on Ubuntu 22.04 amd64 host)
 * Your own domain
 * A Lightning node running [LND](https://github.com/lightningnetwork/lnd/tree/master)
 
 ## What these scripts do
-* Installs and configures `nginx` reverse proxy server
+* Installs all dependencies and configures `nginx` reverse proxy server
+  * This script will overwrite anything in `etc/nginx/sites-available/default`
   * Uses `certbot` to get TLS certificate for domain
 * Deploys Flask server to respond to clients with Lightning invoices
 
@@ -50,13 +51,15 @@ nano .env
 ```
 LND_ONION_ADDRESS="14rgtc4yh2lzl4sdasty4ybnxwwmt6vg75vhrsaypgjmwpbasd423htde.onion" #Repalce with your LND onion address
 LND_TOR_PORT=8080 #Replace with your LND REST port (8080 is default you can most likely leave this as-is)
-LND_INVOICE_MACAROON_HEX="3FA9F5B7E8D2C4A1F3E5B9A7D6C8E2F0" #The HEX value for your LND invoice macaroon
+LND_INVOICE_MACAROON_HEX="3FA9F5B7E8D2C4A1F3E5B9A7D6C8E2F0" #The HEX value for your LND invoice macaroon (It should be much longer than this, this was truncated for the example)
 INTERNET_IDENTIFIER="<YOUR_NAME_OR_NYM_HERE>" ## Add the value on the left side of your LNURL identifier for example if your LNURL identifier is "nabismo@nostpypy.lol" you would add "nabismo" here
-HEX_PUBKEY="4503baa127bdfd0b054384dc5ba82cb0e2a8367cbdb0629179f00db1a34caacc"
+HEX_PUBKEY="4503baa127bdfd0b054384dc5ba82cb0e2a8367cbdb0629179f00ddv34fgserv" # Replace with your own Hex Pubkey
 DOMAIN="<YOUR_DOMAIN>" # Do not include http:// or https:// , For example nostpy.lol
-CONTACT=<YOUR EMAIL ADDRESS> # Fr updates about TLC certificate expirt from Certbot
+CONTACT=<YOUR EMAIL ADDRESS> # For updates about TLC certificate expirt from Certbot
 NGINX_FILE_PATH=/etc/nginx/sites-available/default # Dont change this 
 ```
+* You can get the `HEX` version of your public key from certrain clients and signing extensions
+  * You can also use [NostrDebug Converter Tool](https://nostrdebug.com/converter/) to convert your `npub` to a `HEX` value
 
 ### Setup the server
 
@@ -85,3 +88,17 @@ python3 menu.py
 - [] Improve error handling
 - [] Add unit tests
 - [] Add Wireguard VPN tunnel to connect to node
+- [] Create Docker container deployment option
+- [] Add option to diable the Nginx setup portion ofthe setup script if user is already running Nginx
+- [] Add response to Nostr client to confirm zap completed succsessfully
+
+## Contributing
+
+Anyone is welcome and encourges to contribute! If you want to add feature, feel free to open a pull request. 
+
+If you find a bug, please open an issue and include any relevant details, for example:
+* Operating system and version
+* Python version
+* Expected behavior
+* Actual behavior
+* Any logs that might be helpful in troubleshooting
