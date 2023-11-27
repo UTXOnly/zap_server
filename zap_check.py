@@ -1,4 +1,3 @@
-
 import asyncio
 import json
 import logging
@@ -84,11 +83,14 @@ async def lnurl_pay():
         nostr_resp = request.args.get("nostr")
         if nostr_resp:
             description = json.loads(nostr_resp).get("content")
-
-        # Generate an invoice
         payment_request = await get_invoice(amount_millisatoshis, description)
         logger.debug(f"Payment request is: {payment_request}")
 
+        # Check if the invoice has been paid
+        if await check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
+            logger.info("Invoice has been paid successfully.")
+        else:
+            logger.warning("Invoice may not have been paid.")
 
         return jsonify(
             {
@@ -175,9 +177,5 @@ async def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
         logger.error(f"Error checking invoice payment: {e}")
         raise
 
-
-
-
 if __name__ == "__main__":
-    app.run(debug=True)
-    await check_invoice_payment(payment_request, max_attempts=10, sleep_time=5)
+    asyncio.run(app.run())
