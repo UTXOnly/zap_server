@@ -1,10 +1,7 @@
-
-import asyncio
 import json
 import logging
 import os
 import socket
-import time
 
 import requests
 import socks
@@ -39,7 +36,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-async def get_invoice(amount, description):
+def get_invoice(amount, description):
     try:
         # Create an invoice using LND REST interface over Tor with macaroon authentication
         with socks.socksocket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -71,7 +68,7 @@ async def get_invoice(amount, description):
 
 
 @app.route("/lnurl-pay", methods=["GET"])
-async def lnurl_pay():
+def lnurl_pay():
     try:
         # Get parameters from the request or set default values
         logger.debug(f"Payload is {request}")
@@ -86,9 +83,8 @@ async def lnurl_pay():
             description = json.loads(nostr_resp).get("content")
 
         # Generate an invoice
-        payment_request = await get_invoice(amount_millisatoshis, description)
+        payment_request = get_invoice(amount_millisatoshis, description)
         logger.debug(f"Payment request is: {payment_request}")
-
 
         return jsonify(
             {
@@ -127,7 +123,7 @@ def lnurl_response():
 
     return jsonify(lnurl_pay_response)
 
-async def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
+def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
     """
     Check if the specified invoice has been paid.
 
@@ -177,7 +173,5 @@ async def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
 
 
 
-
 if __name__ == "__main__":
     app.run(debug=True)
-    await check_invoice_payment(payment_request, max_attempts=10, sleep_time=5)
