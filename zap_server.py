@@ -33,7 +33,7 @@ def get_invoice(amount, description):
         VPN_PORT = 51820
 
         # Configure WireGuard VPN tunnel
-        url = f"https://{VPN_HOST}/v1/invoices"
+        url = f"https://{VPN_HOST}:43244/v1/invoices"
         headers = {"Grpc-Metadata-macaroon": LND_INVOICE_MACAROON_HEX}
 
         response = requests.post(
