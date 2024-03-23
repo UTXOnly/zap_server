@@ -46,7 +46,9 @@ def make_http_request(url, headers, data):
             verify=False,  # Disable SSL verification if needed
         )
         response.raise_for_status()
-        return response.json()
+        invoice_data = response.json()
+        logger.debug(f"Received invoice data: {invoice_data}")
+        return invoice_data["payment_request"]
     except requests.exceptions.RequestException as e:
         raise RuntimeError(f"Error making HTTP request: {e}")
 
