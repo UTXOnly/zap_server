@@ -28,33 +28,26 @@ logger = logging.getLogger(__name__)
 
 def get_invoice(amount, description):
     try:
-        # Create an invoice using LND REST interface over Tor with macaroon authentication
-        with socks.socksocket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.set_proxy(socks.SOCKS5, "127.0.0.1", 9050)  # Tor SOCKS proxy
-            s.connect((LND_ONION_ADDRESS, LND_TOR_PORT))
-            url = f"https://{LND_ONION_ADDRESS}:{LND_TOR_PORT}/v1/invoices"
-            logger.debug(f"Sending request to {url}")
-            response = requests.post(
-                url,
-                json={"value": amount, "memo": description},
-                headers={"Grpc-Metadata-macaroon": LND_INVOICE_MACAROON_HEX},
-                proxies={
-                    "http": "socks5h://127.0.0.1:9050",
-                    "https": "socks5h://127.0.0.1:9050",
-                },
-                verify=False,
-            )
-            response.raise_for_status()
-            logger.debug(f"Get Invoice response is: {response}")
+        # Replace these with your WireGuard VPN server's details
+        VPN_HOST = 'VPN_SERVER_IP'
+        VPN_PORT = 51820
+
+        # Configure WireGuard VPN tunnel
+        url = f"https://{VPN_HOST}:{VPN_PORT}/v1/invoices"
+        headers = {"Grpc-Metadata-macaroon": LND_INVOICE_MACAROON_HEX}
+
+        response = requests.post(
+            url,
+            json={"value": amount, "memo": description},
+            headers=headers,
+            verify=False,  # Disable SSL verification if needed
+        )
+        response.raise_for_status()
+
         invoice_data = response.json()
-        logger.debug(f"Received invoice data: {invoice_data}")
         return invoice_data["payment_request"]
     except requests.exceptions.RequestException as e:
-        logger.error(f"Error creating invoice: {e}")
-        logger.debug(
-            f"Response content: {response.content if 'response' in locals() else None}"
-        )
-        raise
+        raise RuntimeError(f"Error creating invoice: {e}")
 
 
 @app.route("/lnurl-pay", methods=["GET"])
