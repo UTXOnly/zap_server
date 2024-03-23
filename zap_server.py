@@ -34,6 +34,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+logger.debug(f"ONion os {LND_ONION_ADDRESS}, VPN is {VPN_HOST}")
+
 
 def make_http_request(url, headers, data):
     try:
