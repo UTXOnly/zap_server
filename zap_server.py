@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 def get_invoice(amount, description):
     try:
         # Replace these with your WireGuard VPN server's details
-        VPN_HOST = 'VPN_SERVER_IP'
+        VPN_HOST = LND_ONION_ADDRESS
         VPN_PORT = 51820
 
         # Configure WireGuard VPN tunnel
