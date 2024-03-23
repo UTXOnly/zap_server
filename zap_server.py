@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 
 
-
 app = Flask(__name__)
 
 load_dotenv()
