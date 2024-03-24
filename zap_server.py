@@ -94,6 +94,8 @@ def lnurl_pay():
         #    logger.debug(f"item in req is")
         tags = nostr_body["tags"]
         logger.debug(f"Tags are {tags} and of type {type(tags)}")
+        relays_value = next((item[1:] for item in tags if item[0] == 'relays'), [])
+        logger.debug(f"Relays are: {relays_value} and of type {type(relays_value)}")
         #loaded = json.loads(tags)
         #logger.debug(f"loaded is {loaded}")
 
