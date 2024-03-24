@@ -93,7 +93,7 @@ def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
         while attempts < max_attempts:
             # Check payment status using LND REST interface over Tor
             encoded_payment_request = urllib.parse.quote(payment_request, safe='')
-            url = f"https://{VPN_HOST}:{LND_REST_PORT}/v1/invoice/{payment_request}"
+            url = f"https://{VPN_HOST}:{LND_REST_PORT}/v1/invoice/{encoded_payment_request}"
             logger.debug(f"Sending request to {url}")
             response = requests.get(
                 url,
