@@ -10,7 +10,7 @@ import socks
 from dotenv import load_dotenv
 from ddtrace import tracer, patch_all
 from nostr import NostpyClient
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, after_this_request
 
 
 app = Flask(__name__)
@@ -75,7 +75,7 @@ def get_invoice(amount, description):
             raise ValueError("Tor or VPN variables not provided.")
     except Exception as e:
         raise RuntimeError(f"Error creating invoice: {e}")
-    
+  
 def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
     """
     Check if the specified invoice has been paid.
@@ -152,13 +152,16 @@ def lnurl_pay():
         r_hash, payment_request = get_invoice(amount_millisatoshis, description)
         logger.debug(f"Payment request is: {payment_request} and r hash is {r_hash}")
 
-        check = check_invoice_payment(payment_request=r_hash)
-        logger.debug(f"Line after check inv")
-        if check:
-            lnurl_obj = NostpyClient(relays_value, HEX_PUBKEY, HEX_PRIV_KEY)
-            for relay in lnurl_obj.relays:
-                lnurl_obj.send_event(relay, logger)
-                logger.debug(f"Event sent is {relay}")
+        @after_this_request
+        def call_functions(response) -> None:
+            check = check_invoice_payment(payment_request=r_hash)
+            logger.debug(f"Line after check inv")
+            if check:
+                lnurl_obj = NostpyClient(relays_value, HEX_PUBKEY, HEX_PRIV_KEY)
+                for relay in lnurl_obj.relays:
+                    lnurl_obj.send_event(relay, logger)
+                    logger.debug(f"Event sent is {relay}")
+            return 
 
         return jsonify(
             {
