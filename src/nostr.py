@@ -5,13 +5,7 @@ import secp256k1
 import time
 import websockets
 
-logging.basicConfig(
-    filename="./nost_query.log",
-    level=logging.DEBUG,
-    format="%(asctime)s %(levelname)s: %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-logger = logging.getLogger(__name__)
+
 
 
 class NostpyClient:
@@ -62,7 +56,7 @@ class NostpyClient:
 
         return event_data
 
-    def verify_signature(self, event_id: str, pubkey: str, sig: str) -> bool:
+    def verify_signature(self, event_id: str, pubkey: str, sig: str, logger) -> bool:
         try:
             pub_key = secp256k1.PublicKey(bytes.fromhex("02" + pubkey), True)
             result = pub_key.schnorr_verify(
@@ -78,14 +72,14 @@ class NostpyClient:
             return False
 
 
-    def send_event(self, ws_relay):
+    def send_event(self, ws_relay, logger):
         with websockets.connect(ws_relay) as ws:
             logger.info("WebSocket connection created.")
 
             event_data = self.create_event(self.pubkey, self.privkey)
             sig = event_data.get("sig")
             id = event_data.get("id")
-            signature_valid = self.verify_signature(id, self.pubkey, sig)
+            signature_valid = self.verify_signature(id, self.pubkey, sig, logger)
             if signature_valid:
                 event_json = json.dumps(("EVENT", event_data))
                 ws.send(event_json)
@@ -94,7 +88,7 @@ class NostpyClient:
                 logger.error("Invalid signature, event not sent.")
             logger.info("WebSocket connection closed.")
 
-    def query(self, ws_relay):
+    def query(self, ws_relay, logger):
         with websockets.connect(ws_relay) as ws:
             logger.info("WebSocket connection created.")
 

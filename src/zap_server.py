@@ -150,7 +150,7 @@ def lnurl_pay():
         if check:
             lnurl_obj = NostpyClient(relays_value, HEX_PUBKEY, HEX_PRIV_KEY)
             for relay in lnurl_obj.relays:
-                lnurl_obj.send_event(relay)
+                lnurl_obj.send_event(relay, logger)
                 logger.debug(f"Event sent is {relay}")
 
         return jsonify(
