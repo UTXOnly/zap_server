@@ -91,13 +91,18 @@ def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
     try:
         attempts = 0
         while attempts < max_attempts:
-            # Check payment status using LND REST interface over Tor
-            encoded_payment_request = urllib.parse.quote(payment_request, safe='')
-            url = f'https://{VPN_HOST}:{LND_REST_PORT}/v2/invoices/subscribe/{encoded_payment_request}'
+            # Encode payment request according to specified rules
+            encoded_payment_request = payment_request.replace('+', '-').replace('/', '_')
+    
+            # Construct the URL
+            url = f'https://{VPN_HOST}:{LND_REST_PORT}/v2/invoices/lookup' #{encoded_payment_request}'
             logger.debug(f"Sending request to {url}")
+    
+            # Make the request
             response = requests.get(
                 url,
                 headers={"Grpc-Metadata-macaroon": LND_INVOICE_MACAROON_HEX},
+                params=encoded_payment_request
                 verify=False,
             )
             response.raise_for_status()
