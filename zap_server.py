@@ -88,8 +88,8 @@ def lnurl_pay():
         if nostr_resp:
             description = json.loads(nostr_resp).get("content")
 
-        for item in request:
-            logger.debug(f"item in req is")
+        #for item in request:
+        #    logger.debug(f"item in req is")
 
         #for item in nostr_resp:
         #    logger.info(f"Item in nost resp is {item}")
