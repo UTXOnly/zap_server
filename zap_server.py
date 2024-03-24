@@ -94,8 +94,8 @@ def lnurl_pay():
         #    logger.debug(f"item in req is")
         tags = nostr_body["tags"]
         logger.debug(f"Tags are {tags} and of type {type(tags)}")
-        loaded = json.loads(tags)
-        logger.debug(f"loaded is {loaded}")
+        #loaded = json.loads(tags)
+        #logger.debug(f"loaded is {loaded}")
 
         for item in nostr_body:
             logger.info(f"Item in nost resp is {item}")
