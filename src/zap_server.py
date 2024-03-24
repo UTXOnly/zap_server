@@ -108,9 +108,9 @@ def check_invoice_payment(payment_request, max_attempts=20, sleep_time=1):
             )
             response.raise_for_status()
             logger.debug(f"Check Payment response is: {response}")
-            logger.debug(f"Check payment response jaon is: {response.json()}")
-            invoice_status = response.json()["settled"]
-            if invoice_status == "true":
+            logger.debug(f"Check payment response jaon is: {response.json()} and of type {type(response.json())}")
+            invoice_status = json.loads(response.json())["settled"]
+            if invoice_status:
                 logger.info("Invoice has been paid successfully.")
                 return True
             else:
