@@ -77,7 +77,7 @@ def get_invoice(amount, description):
     except Exception as e:
         raise RuntimeError(f"Error creating invoice: {e}")
   
-def check_invoice_payment(payment_request, max_attempts=10, sleep_time=1):
+def check_invoice_payment(payment_request, max_attempts=20, sleep_time=1):
     """
     Check if the specified invoice has been paid.
 
@@ -94,7 +94,7 @@ def check_invoice_payment(payment_request, max_attempts=10, sleep_time=1):
         while attempts < max_attempts:
             # Encode payment request according to specified rules
             encoded_payment_request = f"payment_hash={payment_request.replace('+', '-').replace('/', '_')}"
-    
+            logger.debug(f"Attempt number {attempts}")
             # Construct the URL
             url = f'https://{VPN_HOST}:{LND_REST_PORT}/v2/invoices/lookup' #{encoded_payment_request}'
             logger.debug(f"Sending request to {url}")
