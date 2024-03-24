@@ -154,7 +154,7 @@ def lnurl_pay():
         logger.debug(f"Payment request is: {payment_request} and r hash is {r_hash}")
 
         
-    
+        @after_this_request
         def call_functions() -> None:
             check = check_invoice_payment(payment_request=r_hash)
             logger.debug(f"Line after check inv")
