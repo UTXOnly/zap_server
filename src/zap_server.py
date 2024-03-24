@@ -145,7 +145,8 @@ def lnurl_pay():
         payment_request = get_invoice(amount_millisatoshis, description)
         logger.debug(f"Payment request is: {payment_request}")
 
-        check = check_invoice_payment(payment_request)
+        check = check_invoice_payment(payment_request=payment_request)
+        logger.debug(f"Line after check inv")
         if check:
             lnurl_obj = NostpyClient(relays_value, HEX_PUBKEY, HEX_PRIV_KEY)
             for relay in lnurl_obj.relays:
