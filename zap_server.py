@@ -87,20 +87,14 @@ def lnurl_pay():
         nostr_resp = request.args.get("nostr")
         if nostr_resp:
             description = json.loads(nostr_resp).get("content")
-            nostr_body = json.loads(nostr_resp)
-            logger.debug(f"nostr body is {nostr_body} and of type{type(nostr_body)}")
+            #nostr_body = json.loads(nostr_resp)
+            tags = json.loads(nostr_resp)["tags"]
+            #logger.debug(f"nostr body is {nostr_body} and of type{type(nostr_body)}")
 
-        #for item in request:
-        #    logger.debug(f"item in req is")
-        tags = nostr_body["tags"]
-        logger.debug(f"Tags are {tags} and of type {type(tags)}")
+        #tags = nostr_body["tags"]
         relays_value = next((item[1:] for item in tags if item[0] == 'relays'), [])
         logger.debug(f"Relays are: {relays_value} and of type {type(relays_value)}")
-        #loaded = json.loads(tags)
-        #logger.debug(f"loaded is {loaded}")
 
-        for item in nostr_body:
-            logger.info(f"Item in nost resp is {item}")
 
         # Generate an invoice
         payment_request = get_invoice(amount_millisatoshis, description)
