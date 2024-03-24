@@ -34,8 +34,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-logger.debug(f"ONion os {LND_ONION_ADDRESS}, VPN is {VPN_HOST}")
-
 
 def make_http_request(url, headers, data):
     try:
@@ -89,6 +87,9 @@ def lnurl_pay():
         nostr_resp = request.args.get("nostr")
         if nostr_resp:
             description = json.loads(nostr_resp).get("content")
+
+        for item in nostr_resp:
+            logger.info(f"Item in nost resp is {item}")
 
         # Generate an invoice
         payment_request = get_invoice(amount_millisatoshis, description)
