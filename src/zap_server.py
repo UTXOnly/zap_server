@@ -92,7 +92,7 @@ def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
         attempts = 0
         while attempts < max_attempts:
             # Encode payment request according to specified rules
-            encoded_payment_request = "payment_hash=", payment_request.replace('+', '-').replace('/', '_')
+            encoded_payment_request = f"payment_hash={payment_request.replace('+', '-').replace('/', '_')}"
     
             # Construct the URL
             url = f'https://{VPN_HOST}:{LND_REST_PORT}/v2/invoices/lookup' #{encoded_payment_request}'
