@@ -92,7 +92,7 @@ def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
         attempts = 0
         while attempts < max_attempts:
             # Encode payment request according to specified rules
-            encoded_payment_request = payment_request.replace('+', '-').replace('/', '_')
+            encoded_payment_request = "payment_hash=", payment_request.replace('+', '-').replace('/', '_')
     
             # Construct the URL
             url = f'https://{VPN_HOST}:{LND_REST_PORT}/v2/invoices/lookup' #{encoded_payment_request}'
@@ -108,7 +108,7 @@ def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
             response.raise_for_status()
             logger.debug(f"Check Payment response is: {response}")
             invoice_status = response.json()["settled"]
-            if invoice_status:
+            if invoice_status == "true":
                 logger.info("Invoice has been paid successfully.")
                 return True
             else:
