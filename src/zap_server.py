@@ -98,7 +98,7 @@ def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
             response = requests.get(
                 url,
                 headers={"Grpc-Metadata-macaroon": LND_INVOICE_MACAROON_HEX},
-                params=encoded_payment_request,
+                params=payment_request,
                 verify=False,
             )
             response.raise_for_status()
