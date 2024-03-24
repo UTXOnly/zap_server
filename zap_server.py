@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 load_dotenv()
 
-tracer.configure(hostname='127.0.0.1', port=8126)
+tracer.configure(hostname="127.0.0.1", port=8126)
 patch_all()
 
 LND_ONION_ADDRESS = os.getenv("LND_ONION_ADDRESS")
@@ -52,6 +52,7 @@ def make_http_request(url, headers, data):
     except requests.exceptions.RequestException as e:
         raise RuntimeError(f"Error making HTTP request: {e}")
 
+
 def get_invoice(amount, description):
     headers = {"Grpc-Metadata-macaroon": LND_INVOICE_MACAROON_HEX}
     data = {"value": amount, "memo": description}
@@ -72,7 +73,6 @@ def get_invoice(amount, description):
             raise ValueError("Tor or VPN variables not provided.")
     except Exception as e:
         raise RuntimeError(f"Error creating invoice: {e}")
-
 
 
 @app.route("/lnurl-pay", methods=["GET"])
@@ -133,4 +133,4 @@ def lnurl_response():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=5555)
+    app.run(debug=True, host="0.0.0.0", port=5555)
