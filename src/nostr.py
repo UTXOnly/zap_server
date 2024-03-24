@@ -6,7 +6,7 @@ import time
 import websockets
 
 logging.basicConfig(
-    filename="./logs/nost_query.log",
+    filename="./nost_query.log",
     level=logging.DEBUG,
     format="%(asctime)s %(levelname)s: %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
