@@ -154,7 +154,7 @@ def lnurl_pay():
         logger.debug(f"Payment request is: {payment_request} and r hash is {r_hash}")
 
         
-        @after_this_request
+        #@after_this_request
         def call_functions() -> None:
             check = check_invoice_payment(payment_request=r_hash)
             logger.debug(f"Line after check inv")
@@ -163,7 +163,7 @@ def lnurl_pay():
                 for relay in lnurl_obj.relays:
                     lnurl_obj.send_event(relay, logger)
                     logger.debug(f"Event sent is {relay}")
-            return 
+            
         
         thread = threading.Thread(target=call_functions)
         thread.start()
