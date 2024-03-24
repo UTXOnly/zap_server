@@ -92,6 +92,8 @@ def lnurl_pay():
 
         #for item in request:
         #    logger.debug(f"item in req is")
+        tags = nostr_body["tags"]
+        logger.debug(f"Tags are {tags}")
 
         for item in nostr_body:
             logger.info(f"Item in nost resp is {item}")
