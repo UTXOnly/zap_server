@@ -4,6 +4,7 @@ import os
 import socket
 import time
 import urllib.parse
+import threading
 
 import requests
 import socks
@@ -152,8 +153,9 @@ def lnurl_pay():
         r_hash, payment_request = get_invoice(amount_millisatoshis, description)
         logger.debug(f"Payment request is: {payment_request} and r hash is {r_hash}")
 
-        @after_this_request
-        def call_functions(response) -> None:
+        
+    
+        def call_functions() -> None:
             check = check_invoice_payment(payment_request=r_hash)
             logger.debug(f"Line after check inv")
             if check:
@@ -162,6 +164,9 @@ def lnurl_pay():
                     lnurl_obj.send_event(relay, logger)
                     logger.debug(f"Event sent is {relay}")
             return 
+        
+        thread = threading.Thread(target=call_functions)
+        thread.start()
 
         return jsonify(
             {
