@@ -49,7 +49,7 @@ def make_http_request(url, headers, data):
         response.raise_for_status()
         invoice_data = response.json()
         logger.debug(f"Received invoice data: {invoice_data}")
-        return invoice_data["payment_request"]
+        return invoice_data["r_hash"], invoice_data["payment_request"]
     except requests.exceptions.RequestException as e:
         raise RuntimeError(f"Error making HTTP request: {e}")
 
@@ -142,10 +142,10 @@ def lnurl_pay():
 
 
         # Generate an invoice
-        payment_request = get_invoice(amount_millisatoshis, description)
-        logger.debug(f"Payment request is: {payment_request}")
+        r_hash, payment_request = get_invoice(amount_millisatoshis, description)
+        logger.debug(f"Payment request is: {payment_request} and r hash is {r_hash}")
 
-        check = check_invoice_payment(payment_request=payment_request)
+        check = check_invoice_payment(payment_request=r_hash)
         logger.debug(f"Line after check inv")
         if check:
             lnurl_obj = NostpyClient(relays_value, HEX_PUBKEY, HEX_PRIV_KEY)
