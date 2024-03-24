@@ -77,7 +77,7 @@ def get_invoice(amount, description):
     except Exception as e:
         raise RuntimeError(f"Error creating invoice: {e}")
   
-def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
+def check_invoice_payment(payment_request, max_attempts=10, sleep_time=1):
     """
     Check if the specified invoice has been paid.
 
@@ -108,6 +108,7 @@ def check_invoice_payment(payment_request, max_attempts=10, sleep_time=5):
             )
             response.raise_for_status()
             logger.debug(f"Check Payment response is: {response}")
+            logger.debug(f"Check payment response jaon is: {response.json()}")
             invoice_status = response.json()["settled"]
             if invoice_status == "true":
                 logger.info("Invoice has been paid successfully.")
