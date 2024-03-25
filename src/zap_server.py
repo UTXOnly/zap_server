@@ -112,7 +112,8 @@ def check_invoice_payment(payment_request, max_attempts=20, sleep_time=1):
             invoice_status = response.json()["settled"]
             if invoice_status:
                 logger.info("Invoice has been paid successfully.")
-                return True
+                created_at = response.json()["settled_at"]
+                return response.json()
             else:
                 logger.debug("Invoice not yet paid. Retrying...")
             attempts += 1
@@ -160,7 +161,7 @@ def lnurl_pay():
             check = check_invoice_payment(payment_request=r_hash)
             logger.debug(f"Line after check inv")
             if check:
-                lnurl_obj = NostpyClient(relays_value, HEX_PUBKEY, HEX_PRIV_KEY)
+                lnurl_obj = NostpyClient(relays_value, HEX_PUBKEY, HEX_PRIV_KEY, nostr_event)
                 for relay in lnurl_obj.relays:
                     lnurl_obj.send_event(relay, logger)
                     logger.debug(f"Event sent is {relay}")
