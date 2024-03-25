@@ -39,6 +39,7 @@ class NostpyClient:
         try:
             tag_list = [tag_pair for tag_pair in self.kind9734['tags']]
             tag_list.append(self.zap_reciept_tags)
+            return tag_list
         except Exception as exc:
             logger.error(f"Error parsing kind 9735 tags: {exc}")
 
