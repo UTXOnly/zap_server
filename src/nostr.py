@@ -15,6 +15,7 @@ class NostpyClient:
         self.created_at = response['settle_date']
         self.bolt11 = response['payment_request']
         self.preimage = response['r_preimage']
+        self.response = response
         self.zap_reciept_tags = ['settle_date', 'payment_request', 'r_preimage']
         
 
@@ -41,7 +42,7 @@ class NostpyClient:
         try:
             tag_list = [tag_pair for tag_pair in self.kind9734['tags']]
             for key in self.zap_reciept_tags:
-                logger.debug(f"Adding {[key, key[key]]} of type {type([key, key[key]])}")
+                logger.debug(f"Adding {[key, self.response[key]]} of type {type([key, key[key]])}")
                 tag_list.append([key, key[key]])
             return tag_list
         except Exception as exc:
