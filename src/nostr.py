@@ -13,8 +13,7 @@ class NostpyClient:
         self.privkey = privkey
         self.kind9734 = nostr_event
         self.created_at = response['settle_date']
-        self.response = response
-        self.zap_reciept_tags = ['description', ['bolt11', response['payment_request']], ['preimage', response['r_preimage']]]
+        self.zap_reciept_tags = [['description', response], ['bolt11', response['payment_request']], ['preimage', response['r_preimage']]]
         
 
     def sign_event_id(self, event_id: str, private_key_hex: str) -> str:
@@ -40,10 +39,6 @@ class NostpyClient:
         try:
             tag_list = [tag_pair for tag_pair in self.kind9734['tags']]
             tag_list.append(self.zap_reciept_tags)
-            #for key in self.zap_reciept_tags:
-            #    logger.debug(f"Adding {[key, self.response[key]]} of type {type([key, self.response[key]])}")
-            #    tag_list.append([key, self.response[key]])
-            return tag_list
         except Exception as exc:
             logger.error(f"Error parsing kind 9735 tags: {exc}")
 
