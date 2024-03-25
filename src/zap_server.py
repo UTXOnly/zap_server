@@ -2,12 +2,17 @@ import json
 import logging
 import os
 import socket
+import time
+import urllib.parse
+import threading
+import asyncio
 
 import requests
 import socks
 from dotenv import load_dotenv
 from ddtrace import tracer, patch_all
-from flask import Flask, jsonify, request
+from nostr import NostpyClient
+from flask import Flask, jsonify, request, after_this_request
 
 
 app = Flask(__name__)
@@ -23,6 +28,7 @@ LND_REST_PORT = int(os.getenv("LND_REST_PORT"))
 LND_INVOICE_MACAROON_HEX = os.getenv("LND_INVOICE_MACAROON_HEX")
 INTERNET_IDENTIFIER = os.getenv("INTERNET_IDENTIFIER")
 HEX_PUBKEY = os.getenv("HEX_PUBKEY")
+HEX_PRIV_KEY = os.getenv("HEX_PRIV_KEY")
 DOMAIN = os.getenv("DOMAIN")
 IDENTITY = INTERNET_IDENTIFIER.split("@")[0]
 
@@ -33,8 +39,6 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 logger = logging.getLogger(__name__)
-
-logger.debug(f"ONion os {LND_ONION_ADDRESS}, VPN is {VPN_HOST}")
 
 
 def make_http_request(url, headers, data):
@@ -48,7 +52,7 @@ def make_http_request(url, headers, data):
         response.raise_for_status()
         invoice_data = response.json()
         logger.debug(f"Received invoice data: {invoice_data}")
-        return invoice_data["payment_request"]
+        return invoice_data["r_hash"], invoice_data["payment_request"]
     except requests.exceptions.RequestException as e:
         raise RuntimeError(f"Error making HTTP request: {e}")
 
@@ -75,11 +79,59 @@ def get_invoice(amount, description):
         raise RuntimeError(f"Error creating invoice: {e}")
 
 
+def check_invoice_payment(payment_request, max_attempts=20, sleep_time=1):
+    """
+    Check if the specified invoice has been paid.
+
+    Parameters:
+    - payment_request (str): The payment request of the invoice.
+    - max_attempts (int): The maximum number of attempts to check the payment.
+    - sleep_time (int): The time to sleep between each attempt.
+
+    Returns:
+    - bool: True if the invoice has been paid, False otherwise.
+    """
+    try:
+        attempts = 0
+        while attempts < max_attempts:
+            # Encode payment request according to specified rules
+            encoded_payment_request = (
+                f"payment_hash={payment_request.replace('+', '-').replace('/', '_')}"
+            )
+            logger.debug(f"Attempt number {attempts}")
+            url = f"https://{VPN_HOST}:{LND_REST_PORT}/v2/invoices/lookup"  # {encoded_payment_request}'
+            logger.debug(f"Sending request to {url}")
+
+            response = requests.get(
+                url,
+                headers={"Grpc-Metadata-macaroon": LND_INVOICE_MACAROON_HEX},
+                params=encoded_payment_request,
+                verify=False,
+            )
+            response.raise_for_status()
+            invoice_status = response.json()["settled"]
+            if invoice_status:
+                logger.info("Invoice has been paid successfully.")
+                return response.json()
+            else:
+                logger.info("Invoice not yet paid. Retrying...")
+            attempts += 1
+            time.sleep(sleep_time)
+
+        logger.warning("Maximum attempts reached. Invoice may not have been paid.")
+        return False
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error checking invoice payment: {e}")
+        raise
+
+
 @app.route("/lnurl-pay", methods=["GET"])
 def lnurl_pay():
     try:
         # Get parameters from the request or set default values
         logger.debug(f"Payload is {request}")
+
         amount_satoshis = int(
             request.args.get("amount", 1000)
         )  # Default to 1000 millisatoshis (1 satoshi)
@@ -88,11 +140,27 @@ def lnurl_pay():
         description = request.args.get("comment")
         nostr_resp = request.args.get("nostr")
         if nostr_resp:
-            description = json.loads(nostr_resp).get("content")
+            nostr_event = json.loads(nostr_resp)
+            description = nostr_event["content"]
+            tags = nostr_event["tags"]
+            relays_value = next((item[1:] for item in tags if item[0] == "relays"), [])
 
         # Generate an invoice
-        payment_request = get_invoice(amount_millisatoshis, description)
-        logger.debug(f"Payment request is: {payment_request}")
+        r_hash, payment_request = get_invoice(amount_millisatoshis, description)
+        logger.debug(f"Payment request is: {payment_request} and r hash is {r_hash}")
+
+        def call_functions() -> None:
+            check = check_invoice_payment(payment_request=r_hash)
+            if check:
+                lnurl_obj = NostpyClient(
+                    relays_value, HEX_PUBKEY, HEX_PRIV_KEY, nostr_event, check
+                )
+                for relay in lnurl_obj.relays:
+                    lnurl_obj.send_event(relay, logger)
+                    logger.debug(f"Event sent is {relay}")
+
+        thread = threading.Thread(target=call_functions)
+        thread.start()
 
         return jsonify(
             {
