@@ -77,7 +77,8 @@ def get_invoice(amount, description):
             raise ValueError("Tor or VPN variables not provided.")
     except Exception as e:
         raise RuntimeError(f"Error creating invoice: {e}")
-  
+
+
 def check_invoice_payment(payment_request, max_attempts=20, sleep_time=1):
     """
     Check if the specified invoice has been paid.
@@ -94,13 +95,13 @@ def check_invoice_payment(payment_request, max_attempts=20, sleep_time=1):
         attempts = 0
         while attempts < max_attempts:
             # Encode payment request according to specified rules
-            encoded_payment_request = f"payment_hash={payment_request.replace('+', '-').replace('/', '_')}"
+            encoded_payment_request = (
+                f"payment_hash={payment_request.replace('+', '-').replace('/', '_')}"
+            )
             logger.debug(f"Attempt number {attempts}")
-            # Construct the URL
-            url = f'https://{VPN_HOST}:{LND_REST_PORT}/v2/invoices/lookup' #{encoded_payment_request}'
+            url = f"https://{VPN_HOST}:{LND_REST_PORT}/v2/invoices/lookup"  # {encoded_payment_request}'
             logger.debug(f"Sending request to {url}")
-    
-            # Make the request
+
             response = requests.get(
                 url,
                 headers={"Grpc-Metadata-macaroon": LND_INVOICE_MACAROON_HEX},
@@ -108,14 +109,12 @@ def check_invoice_payment(payment_request, max_attempts=20, sleep_time=1):
                 verify=False,
             )
             response.raise_for_status()
-            logger.debug(f"Check Payment response is: {response}")
-            logger.debug(f"Check payment response jaon is: {response.json()} and of type {type(response.json())}")
             invoice_status = response.json()["settled"]
             if invoice_status:
                 logger.info("Invoice has been paid successfully.")
                 return response.json()
             else:
-                logger.debug("Invoice not yet paid. Retrying...")
+                logger.info("Invoice not yet paid. Retrying...")
             attempts += 1
             time.sleep(sleep_time)
 
@@ -127,13 +126,12 @@ def check_invoice_payment(payment_request, max_attempts=20, sleep_time=1):
         raise
 
 
-
 @app.route("/lnurl-pay", methods=["GET"])
 def lnurl_pay():
     try:
         # Get parameters from the request or set default values
         logger.debug(f"Payload is {request}")
-        
+
         amount_satoshis = int(
             request.args.get("amount", 1000)
         )  # Default to 1000 millisatoshis (1 satoshi)
@@ -145,32 +143,22 @@ def lnurl_pay():
             nostr_event = json.loads(nostr_resp)
             description = nostr_event["content"]
             tags = nostr_event["tags"]
-            relays_value = next((item[1:] for item in tags if item[0] == 'relays'), [])
-            logger.debug(f"Relays are: {relays_value} and of type {type(relays_value)}")
-
-        
-
+            relays_value = next((item[1:] for item in tags if item[0] == "relays"), [])
 
         # Generate an invoice
         r_hash, payment_request = get_invoice(amount_millisatoshis, description)
         logger.debug(f"Payment request is: {payment_request} and r hash is {r_hash}")
 
-        
-        #@after_this_request
         def call_functions() -> None:
             check = check_invoice_payment(payment_request=r_hash)
-            logger.debug(f"Line after check inv")
             if check:
-                logger.debug(f"If check = true and is {check}")
-                logger.debug(f"vars are {relays_value}, {HEX_PUBKEY}, {HEX_PRIV_KEY}, {nostr_event}, {check}")
-                lnurl_obj = NostpyClient(relays_value, HEX_PUBKEY, HEX_PRIV_KEY, nostr_event, check)
-                logger.debug(f"Line after obj creation")
+                lnurl_obj = NostpyClient(
+                    relays_value, HEX_PUBKEY, HEX_PRIV_KEY, nostr_event, check
+                )
                 for relay in lnurl_obj.relays:
-                    logger.debug("Inside send event loop")
                     lnurl_obj.send_event(relay, logger)
                     logger.debug(f"Event sent is {relay}")
-            
-        
+
         thread = threading.Thread(target=call_functions)
         thread.start()
 
