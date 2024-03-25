@@ -12,7 +12,7 @@ class NostpyClient:
         self.pubkey = pubkey
         self.privkey = privkey
         self.kind9734 = nostr_event
-        #self.created_at = response['settle_date']
+        self.created_at = response['settle_date']
         #self.bolt11 = response['payment_request']
         #self.preimage = response['r_preimage']
         self.response = response
@@ -42,8 +42,8 @@ class NostpyClient:
         try:
             tag_list = [tag_pair for tag_pair in self.kind9734['tags']]
             for key in self.zap_reciept_tags:
-                logger.debug(f"Adding {[key, self.response[key]]} of type {type([key, key[key]])}")
-                tag_list.append([key, key[key]])
+                logger.debug(f"Adding {[key, self.response[key]]} of type {type([key, self.response[key]])}")
+                tag_list.append([key, self.response[key]])
             return tag_list
         except Exception as exc:
             logger.error(f"Error parsing kind 9375 tags: {exc}")
