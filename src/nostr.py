@@ -16,7 +16,7 @@ class NostpyClient:
         self.bolt11 = response['payment_request']
         self.preimage = response['r_preimage']
         self.zap_reciept_tags = ['settle_date', 'payment_request', 'r_preimage']
-        pass
+        
 
     def sign_event_id(self, event_id: str, private_key_hex: str) -> str:
         private_key = secp256k1.PrivateKey(bytes.fromhex(private_key_hex))

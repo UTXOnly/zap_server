@@ -112,7 +112,6 @@ def check_invoice_payment(payment_request, max_attempts=20, sleep_time=1):
             invoice_status = response.json()["settled"]
             if invoice_status:
                 logger.info("Invoice has been paid successfully.")
-                created_at = response.json()["settled_at"]
                 return response.json()
             else:
                 logger.debug("Invoice not yet paid. Retrying...")
