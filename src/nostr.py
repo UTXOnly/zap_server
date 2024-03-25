@@ -13,7 +13,7 @@ class NostpyClient:
         self.privkey = privkey
         self.kind9734 = nostr_event
         self.created_at = response['settle_date']
-        self.zap_reciept_tags = [['description', json.dumps(response)], ['bolt11', response['payment_request']], ['preimage', response['r_preimage']]]
+        self.zap_reciept_tags = [['description', json.dumps(nostr_event)], ['bolt11', response['payment_request']], ['preimage', response['r_preimage']]]
         
 
     def sign_event_id(self, event_id: str, private_key_hex: str) -> str:
