@@ -41,7 +41,8 @@ class NostpyClient:
     def parse_tags(self, logger):
         try:
             tag_list = [tag_pair for tag_pair in self.kind9734["tags"]]
-            tag_list.append(self.zap_reciept_tags)
+            for tag in self.zap_reciept_tags:    
+                tag_list.append(tag)
             return tag_list
         except Exception as exc:
             logger.error(f"Error parsing kind 9735 tags: {exc}")
@@ -83,7 +84,7 @@ class NostpyClient:
     def send_event(self, ws_relay, logger):
         try:
             ws = create_connection(ws_relay)
-            logger.info("WebSocket connection created.")
+            logger.info(f"WebSocket connection created with {ws_relay}")
             event_data = self.create_event(9735, logger)
             sig = event_data["sig"]
             id = event_data["id"]
@@ -91,7 +92,7 @@ class NostpyClient:
             if signature_valid:
                 event_json = json.dumps(("EVENT", event_data))
                 ws.send(event_json)
-                logger.debug(f"Event sent: {event_json}")
+                logger.debug(f"Event sent to {ws_relay}: {event_json}")
             else:
                 logger.error("Invalid signature, event not sent.")
             ws.close()
