@@ -27,7 +27,6 @@ def start_flask_server():
         subprocess.run(["python3", "-m", "venv", "zap_venv"], check=True)
         activate_cmd = ". zap_venv/bin/activate && "
         commands = ["tmux new-session -s zap_server -d python ./src/zap_server.py"]
-        #commands = ["python ./src/zap_server.py"]
         for cmd in commands:
             subprocess.run(["bash", "-c", activate_cmd + cmd], check=True)
 
