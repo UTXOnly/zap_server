@@ -13,7 +13,7 @@ class NostpyClient:
         self.privkey = privkey
         self.kind9734 = nostr_event
         self.created_at = response['settle_date']
-        self.zap_reciept_tags = [['description', response], ['bolt11', response['payment_request']], ['preimage', response['r_preimage']]]
+        self.zap_reciept_tags = [['description', json.dumps(response)], ['bolt11', response['payment_request']], ['preimage', response['r_preimage']]]
         
 
     def sign_event_id(self, event_id: str, private_key_hex: str) -> str:
@@ -86,7 +86,7 @@ class NostpyClient:
         try:
             ws = create_connection(ws_relay)
             logger.info("WebSocket connection created.")
-            event_data = self.create_event(9375, logger)
+            event_data = self.create_event(9735, logger)
             sig = event_data['sig']
             id = event_data['id']
             signature_valid = self.verify_signature(id, self.pubkey, sig, logger)
