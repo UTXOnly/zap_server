@@ -90,20 +90,23 @@ class NostpyClient:
     async def send_event(self, ws_relay, logger):
         logger.debug("Inside send event func")
         #async with websockets.connect(ws_relay) as ws:
-        ws = create_connection(ws_relay)
-        logger.info("WebSocket connection created.")
-        event_data = self.create_event(9375, logger)
-        sig = event_data['sig']
-        id = event_data['id']
-        signature_valid = self.verify_signature(id, self.pubkey, sig, logger)
-        if signature_valid:
-            event_json = json.dumps(("EVENT", event_data))
-            ws.send(event_json)
-            logger.info(f"Event sent: {event_json}")
-        else:
-            logger.error("Invalid signature, event not sent.")
-        ws.close()
-        logger.info("WebSocket connection closed.")
+        try:
+            ws = create_connection(ws_relay)
+            logger.info("WebSocket connection created.")
+            event_data = self.create_event(9375, logger)
+            sig = event_data['sig']
+            id = event_data['id']
+            signature_valid = self.verify_signature(id, self.pubkey, sig, logger)
+            if signature_valid:
+                event_json = json.dumps(("EVENT", event_data))
+                ws.send(event_json)
+                logger.info(f"Event sent: {event_json}")
+            else:
+                logger.error("Invalid signature, event not sent.")
+            ws.close()
+            logger.info("WebSocket connection closed.")
+        except Exception as exc:
+            logger.error(f"Error sending ws event: {exc}")
 
 if __name__ == "__main__":
     pass
