@@ -91,7 +91,7 @@ class NostpyClient:
         with websockets.connect(ws_relay) as ws:
             logger.info("WebSocket connection created.")
 
-            event_data = self.create_event(9375)
+            event_data = self.create_event(9375, logger)
             sig = event_data['sig']
             id = event_data['id']
             signature_valid = self.verify_signature(id, self.pubkey, sig, logger)
