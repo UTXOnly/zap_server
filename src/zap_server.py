@@ -165,6 +165,7 @@ def lnurl_pay():
                 lnurl_obj = NostpyClient(relays_value, HEX_PUBKEY, HEX_PRIV_KEY, nostr_event, check)
                 logger.debug(f"Line after obj creation")
                 for relay in lnurl_obj.relays:
+                    logger.debug("Inside send event loop")
                     lnurl_obj.send_event(relay, logger)
                     logger.debug(f"Event sent is {relay}")
             

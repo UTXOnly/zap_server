@@ -88,6 +88,7 @@ class NostpyClient:
 
 
     def send_event(self, ws_relay, logger):
+        logger.debug("Inside send event func")
         with websockets.connect(ws_relay) as ws:
             logger.info("WebSocket connection created.")
 
