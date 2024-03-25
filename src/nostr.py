@@ -3,7 +3,7 @@ import json
 import logging
 import secp256k1
 import time
-import websockets
+from websocket import create_connection
 
 
 class NostpyClient:
@@ -87,50 +87,23 @@ class NostpyClient:
             return False
 
 
-    def send_event(self, ws_relay, logger):
+    async def send_event(self, ws_relay, logger):
         logger.debug("Inside send event func")
-        with websockets.connect(ws_relay) as ws:
-            logger.info("WebSocket connection created.")
-
-            event_data = self.create_event(9375, logger)
-            sig = event_data['sig']
-            id = event_data['id']
-            signature_valid = self.verify_signature(id, self.pubkey, sig, logger)
-            if signature_valid:
-                event_json = json.dumps(("EVENT", event_data))
-                ws.send(event_json)
-                logger.info(f"Event sent: {event_json}")
-            else:
-                logger.error("Invalid signature, event not sent.")
-            logger.info("WebSocket connection closed.")
-
-
-    #def query(self, ws_relay, logger):
-    #    with websockets.connect(ws_relay) as ws:
-    #        logger.info("WebSocket connection created.")
-#
-    #        current_time = int(time.time())  # Get the current timestamp
-    #        past_time = current_time - 120  # Subtract 180 seconds (3 minutes)
-#
-    #        query_dict = {
-    #            # "search": "specialsearch",
-    #            "kinds": [1, 7, 9735, 30023],
-    #            "limit": 300,
-    #            "since": past_time,
-    #            # "#e": ["96acd33c59abb33dc467d5528536ced2983827efcba89c84343aa3e78d8d44ea"],
-    #            "authors": [
-    #                "b97b26c3ec44390727b5800598a9de42b222ae7b5402abcf13d2ae8f386e4e0c",
-    #                "d576043ce19fa2cb684de60ffb8fe529e420a1411b96b6788f11cb0442252eea",
-    #            ],
-    #        }
-#
-    #        q = query_dict
-    #        query_ws = json.dumps(("REQ", "5326483051590112", q))
-    #        for i in range(5):
-    #            ws.send(query_ws)
-    #            logger.info(f"Query sent: {query_ws}")
-    #            response = ws.recv()
-    #            logger.info(f"Response from websocket server: {response}")
+        #async with websockets.connect(ws_relay) as ws:
+        ws = create_connection(ws_relay)
+        logger.info("WebSocket connection created.")
+        event_data = self.create_event(9375, logger)
+        sig = event_data['sig']
+        id = event_data['id']
+        signature_valid = self.verify_signature(id, self.pubkey, sig, logger)
+        if signature_valid:
+            event_json = json.dumps(("EVENT", event_data))
+            ws.send(event_json)
+            logger.info(f"Event sent: {event_json}")
+        else:
+            logger.error("Invalid signature, event not sent.")
+        ws.close()
+        logger.info("WebSocket connection closed.")
 
 if __name__ == "__main__":
     pass
