@@ -13,10 +13,8 @@ class NostpyClient:
         self.privkey = privkey
         self.kind9734 = nostr_event
         self.created_at = response['settle_date']
-        #self.bolt11 = response['payment_request']
-        #self.preimage = response['r_preimage']
         self.response = response
-        self.zap_reciept_tags = ['settle_date', 'payment_request', 'r_preimage']
+        self.zap_reciept_tags = ['description', ['bolt11', response['payment_request']], ['preimage', response['r_preimage']]]
         
 
     def sign_event_id(self, event_id: str, private_key_hex: str) -> str:
@@ -41,22 +39,21 @@ class NostpyClient:
     def parse_tags(self, logger):
         try:
             tag_list = [tag_pair for tag_pair in self.kind9734['tags']]
+            tag_list.append()
             for key in self.zap_reciept_tags:
                 logger.debug(f"Adding {[key, self.response[key]]} of type {type([key, self.response[key]])}")
                 tag_list.append([key, self.response[key]])
             return tag_list
         except Exception as exc:
-            logger.error(f"Error parsing kind 9375 tags: {exc}")
+            logger.error(f"Error parsing kind 9735 tags: {exc}")
 
 
     def create_event(self, kind_number, logger):
         
-        kind_9375_tags = self.parse_tags(logger)
-        created_at = int(time.time())
-        kind_number = 9374
+        kind_9735_tags = self.parse_tags(logger)
         content = ''
         event_id = self.calc_event_id(
-            self.pubkey, created_at, kind_number, kind_9375_tags, content
+            self.pubkey, self.created_at, kind_number, kind_9735_tags, content
         )
         signature_hex = self.sign_event_id(event_id, self.privkey)
         event_data = {
@@ -64,7 +61,7 @@ class NostpyClient:
             "pubkey": self.pubkey,
             "kind": kind_number,
             "created_at": self.created_at,
-            "tags": kind_9375_tags,
+            "tags": kind_9735_tags,
             "content": content,
             "sig": signature_hex,
         }
