@@ -87,7 +87,7 @@ class NostpyClient:
             return False
 
 
-    async def send_event(self, ws_relay, logger):
+    def send_event(self, ws_relay, logger):
         logger.debug("Inside send event func")
         #async with websockets.connect(ws_relay) as ws:
         try:
@@ -107,6 +107,3 @@ class NostpyClient:
             logger.info("WebSocket connection closed.")
         except Exception as exc:
             logger.error(f"Error sending ws event: {exc}")
-
-if __name__ == "__main__":
-    pass
