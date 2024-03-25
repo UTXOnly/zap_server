@@ -12,9 +12,9 @@ class NostpyClient:
         self.pubkey = pubkey
         self.privkey = privkey
         self.kind9734 = nostr_event
-        self.created_at = response['settle_date']
-        self.bolt11 = response['payment_request']
-        self.preimage = response['r_preimage']
+        #self.created_at = response['settle_date']
+        #self.bolt11 = response['payment_request']
+        #self.preimage = response['r_preimage']
         self.response = response
         self.zap_reciept_tags = ['settle_date', 'payment_request', 'r_preimage']
         
@@ -91,7 +91,7 @@ class NostpyClient:
         with websockets.connect(ws_relay) as ws:
             logger.info("WebSocket connection created.")
 
-            event_data = self.create_event(self.pubkey, self.privkey)
+            event_data = self.create_event(9375)
             sig = event_data['sig']
             id = event_data['id']
             signature_valid = self.verify_signature(id, self.pubkey, sig, logger)
@@ -104,32 +104,32 @@ class NostpyClient:
             logger.info("WebSocket connection closed.")
 
 
-    def query(self, ws_relay, logger):
-        with websockets.connect(ws_relay) as ws:
-            logger.info("WebSocket connection created.")
+    #def query(self, ws_relay, logger):
+    #    with websockets.connect(ws_relay) as ws:
+    #        logger.info("WebSocket connection created.")
+#
+    #        current_time = int(time.time())  # Get the current timestamp
+    #        past_time = current_time - 120  # Subtract 180 seconds (3 minutes)
+#
+    #        query_dict = {
+    #            # "search": "specialsearch",
+    #            "kinds": [1, 7, 9735, 30023],
+    #            "limit": 300,
+    #            "since": past_time,
+    #            # "#e": ["96acd33c59abb33dc467d5528536ced2983827efcba89c84343aa3e78d8d44ea"],
+    #            "authors": [
+    #                "b97b26c3ec44390727b5800598a9de42b222ae7b5402abcf13d2ae8f386e4e0c",
+    #                "d576043ce19fa2cb684de60ffb8fe529e420a1411b96b6788f11cb0442252eea",
+    #            ],
+    #        }
+#
+    #        q = query_dict
+    #        query_ws = json.dumps(("REQ", "5326483051590112", q))
+    #        for i in range(5):
+    #            ws.send(query_ws)
+    #            logger.info(f"Query sent: {query_ws}")
+    #            response = ws.recv()
+    #            logger.info(f"Response from websocket server: {response}")
 
-            current_time = int(time.time())  # Get the current timestamp
-            past_time = current_time - 120  # Subtract 180 seconds (3 minutes)
-
-            query_dict = {
-                # "search": "specialsearch",
-                "kinds": [1, 7, 9735, 30023],
-                "limit": 300,
-                "since": past_time,
-                # "#e": ["96acd33c59abb33dc467d5528536ced2983827efcba89c84343aa3e78d8d44ea"],
-                "authors": [
-                    "b97b26c3ec44390727b5800598a9de42b222ae7b5402abcf13d2ae8f386e4e0c",
-                    "d576043ce19fa2cb684de60ffb8fe529e420a1411b96b6788f11cb0442252eea",
-                ],
-            }
-
-            q = query_dict
-            query_ws = json.dumps(("REQ", "5326483051590112", q))
-            for i in range(5):
-                ws.send(query_ws)
-                logger.info(f"Query sent: {query_ws}")
-                response = ws.recv()
-                logger.info(f"Response from websocket server: {response}")
-
-    def main():
-        pass
+if __name__ == "__main__":
+    pass
