@@ -161,7 +161,9 @@ def lnurl_pay():
             logger.debug(f"Line after check inv")
             if check:
                 logger.debug(f"If check = true and is {check}")
+                logger.debug(f"vars are {relays_value}, {HEX_PUBKEY}, {HEX_PRIV_KEY}, {nostr_event}, {check}")
                 lnurl_obj = NostpyClient(relays_value, HEX_PUBKEY, HEX_PRIV_KEY, nostr_event, check)
+                logger.debug(f"Line after obj creation")
                 for relay in lnurl_obj.relays:
                     lnurl_obj.send_event(relay, logger)
                     logger.debug(f"Event sent is {relay}")
