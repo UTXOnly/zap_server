@@ -49,7 +49,7 @@ class NostpyClient:
 
     def create_event(self, kind_number, logger):
         kind_9735_tags = self.parse_tags(logger)
-        content = ""
+        #content = ""
         event_id = self.calc_event_id(
             self.pubkey, self.created_at, kind_number, kind_9735_tags, content=""
         )
@@ -60,7 +60,7 @@ class NostpyClient:
             "kind": kind_number,
             "created_at": self.created_at,
             "tags": kind_9735_tags,
-            "content": content,
+            "content": '',#content,
             "sig": signature_hex,
         }
         return event_data
