@@ -3,16 +3,14 @@ import logging
 import os
 import socket
 import time
-import urllib.parse
 import threading
-import asyncio
 
 import requests
 import socks
 from dotenv import load_dotenv
 from ddtrace import tracer, patch_all
 from nostr import NostpyClient
-from flask import Flask, jsonify, request, after_this_request
+from flask import Flask, jsonify, request
 
 
 app = Flask(__name__)

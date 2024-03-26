@@ -49,9 +49,9 @@ class NostpyClient:
 
     def create_event(self, kind_number, logger):
         kind_9735_tags = self.parse_tags(logger)
-        content = ""
+        #content = ""
         event_id = self.calc_event_id(
-            self.pubkey, self.created_at, kind_number, kind_9735_tags, content
+            self.pubkey, self.created_at, kind_number, kind_9735_tags, content=""
         )
         signature_hex = self.sign_event_id(event_id, self.privkey)
         event_data = {
@@ -60,10 +60,9 @@ class NostpyClient:
             "kind": kind_number,
             "created_at": self.created_at,
             "tags": kind_9735_tags,
-            "content": content,
+            "content": '',#content,
             "sig": signature_hex,
         }
-
         return event_data
 
     def verify_signature(self, event_id: str, pubkey: str, sig: str, logger) -> bool:
@@ -86,13 +85,11 @@ class NostpyClient:
             ws = create_connection(ws_relay)
             logger.info(f"WebSocket connection created with {ws_relay}")
             event_data = self.create_event(9735, logger)
-            sig = event_data["sig"]
-            id = event_data["id"]
-            signature_valid = self.verify_signature(id, self.pubkey, sig, logger)
+            signature_valid = self.verify_signature(event_data["id"], self.pubkey, event_data["sig"], logger)
             if signature_valid:
-                event_json = json.dumps(("EVENT", event_data))
-                ws.send(event_json)
-                logger.debug(f"Event sent to {ws_relay}: {event_json}")
+                json_event = json.dumps(("EVENT", event_data))
+                ws.send(json_event)
+                logger.debug(f"Event sent to {ws_relay}: {json_event}")
             else:
                 logger.error("Invalid signature, event not sent.")
             ws.close()
