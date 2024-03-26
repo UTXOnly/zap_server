@@ -59,7 +59,7 @@ class NostpyClient:
             "kind": kind_number,
             "created_at": self.created_at,
             "tags": kind_9735_tags,
-            "content": "",  # content,
+            "content": "",
             "sig": signature_hex,
         }
         return event_data
