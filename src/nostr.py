@@ -41,7 +41,7 @@ class NostpyClient:
     def parse_tags(self, logger):
         try:
             tag_list = [tag_pair for tag_pair in self.kind9734["tags"]]
-            for tag in self.zap_reciept_tags:    
+            for tag in self.zap_reciept_tags:
                 tag_list.append(tag)
             return tag_list
         except Exception as exc:
@@ -49,7 +49,6 @@ class NostpyClient:
 
     def create_event(self, kind_number, logger):
         kind_9735_tags = self.parse_tags(logger)
-        #content = ""
         event_id = self.calc_event_id(
             self.pubkey, self.created_at, kind_number, kind_9735_tags, content=""
         )
@@ -60,7 +59,7 @@ class NostpyClient:
             "kind": kind_number,
             "created_at": self.created_at,
             "tags": kind_9735_tags,
-            "content": '',#content,
+            "content": "",
             "sig": signature_hex,
         }
         return event_data
@@ -85,7 +84,9 @@ class NostpyClient:
             ws = create_connection(ws_relay)
             logger.info(f"WebSocket connection created with {ws_relay}")
             event_data = self.create_event(9735, logger)
-            signature_valid = self.verify_signature(event_data["id"], self.pubkey, event_data["sig"], logger)
+            signature_valid = self.verify_signature(
+                event_data["id"], self.pubkey, event_data["sig"], logger
+            )
             if signature_valid:
                 json_event = json.dumps(("EVENT", event_data))
                 ws.send(json_event)
