@@ -2,11 +2,11 @@
 A [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) server that allows you recieve zaps on nostr, forwarded to your lightning node running on Tor. This server allows you to create a [Lightning Address](https://github.com/andrerfneves/lightning-address/blob/master/DIY.md) by selecting a username and using a your own domain. YOu can run this zap server on a $5 a month VPS, I have included some guides in the additional resouces section of this README to help guide users if need be.
 
 #### Tradeoffs
-* You recieve zaps directly to you lightning node
-  * You custody your own sats and don't need to worry about sweeping them from a custodial wallet or getting rug pulled by a custodian
-* You are creating invoices from your own lightning node and could potentially share information about your node (for example node pubkey, channel balances, UTXOs). See [this article](https://abytesjourney.com/lightning-privacy/#:~:text=you%20receive%20payments.-,Invoices,-Typically%2C%20whenever%20you) for more information about lightning privacy
-* You must maintain sufficent inbound liquidity to recieve zaps and have some path between the sender's wallet and your node
-* You are storing an [invoice.macaroon](https://docs.lightning.engineering/lightning-network-tools/lnd/macaroons#:~:text=invoice.macaroon,write%3B%20onchain%3A%20read) on your zap server which can read and create invoices on your node, protect this!
+* Recieve zaps directly to you lightning node
+  * Custody your own sats and don't need to worry about sweeping them from a custodial wallet or getting rug pulled by a custodian
+* Create invoices from your own lightning node and could potentially share information about your node (for example node pubkey, channel balances, UTXOs). See [this article](https://abytesjourney.com/lightning-privacy/#:~:text=you%20receive%20payments.-,Invoices,-Typically%2C%20whenever%20you) for more information about lightning privacy
+* Must maintain sufficent inbound liquidity to recieve zaps and have some path between the sender's wallet and your node
+* Storing an [invoice.macaroon](https://docs.lightning.engineering/lightning-network-tools/lnd/macaroons#:~:text=invoice.macaroon,write%3B%20onchain%3A%20read) on your zap server which can read and create invoices on your node, protect this!
 
 
 ## How it works?
@@ -49,14 +49,16 @@ nano .env
 * Example `.env` file:
 
 ```
-LND_ONION_ADDRESS="14rgtc4yh2lzl4sdasty4ybnxwwmt6vg75vhrsaypgjmwpbasd423htde.onion" #Repalce with your LND onion address
-LND_TOR_PORT=8080 #Replace with your LND REST port (8080 is default you can most likely leave this as-is)
-LND_INVOICE_MACAROON_HEX="3FA9F5B7E8D2C4A1F3E5B9A7D6C8E2F0" #The HEX value for your LND invoice macaroon (It should be much longer than this, this was truncated for the example)
-INTERNET_IDENTIFIER="<YOUR_NAME_OR_NYM_HERE>" ## Add the value on the left side of your LNURL identifier for example if your LNURL identifier is "nabismo@nostpypy.lol" you would add "nabismo" here
-HEX_PUBKEY="4503baa127bdfd0b054384dc5ba82cb0e2a8367cbdb0629179f00ddv34fgserv" # Replace with your own Hex Pubkey
-DOMAIN="<YOUR_DOMAIN>" # Do not include http:// or https:// , For example nostpy.lol
-CONTACT=<YOUR EMAIL ADDRESS> # For updates about TLC certificate expirt from Certbot
-NGINX_FILE_PATH=/etc/nginx/sites-available/default # Dont change this 
+LND_ONION_ADDRESS=''#"<YOUR_LND_NODE_ONION_ADDRESS>" For example, xyzdasdsadsa.onion, leave blank if using Wireguard VPN
+VPN_HOST=''# <YOUR_HOST_IP> for you VPN client
+LND_REST_PORT=8080 #Default LND REST port is 8080, in most cases you can leave this untouched
+LND_INVOICE_MACAROON_HEX="<YOUR_LND_INVOICE_HEX_HERE>"
+INTERNET_IDENTIFIER="<IDENTIFIER_HERE>" ## Add the value on the left side of your LNURL identifier for example if your LNURL identifier is "nabismo@nostpypy.lol" you would add "nabismo" here
+HEX_PUBKEY='' # <YOUR_NOSTR_HEX_PUBKEY> 
+HEX_PRIV_KEY='' #<YOUR_NOSTR_HEX_PRIV_KEY>
+DOMAIN="<YOUR_DOMAIN_HERE>" # For example nostpy.lol
+CONTACT=<YOUR_EMAIL_ADDRESS> #Enter your email address for the certbot command to get emails about your TLS certificate when it is near expiration
+NGINX_FILE_PATH=/etc/nginx/sites-available/default #Leave this untouched
 ```
 * You can get the `HEX` version of your public key from certrain clients and signing extensions
   * You can also use [NostrDebug Converter Tool](https://nostrdebug.com/converter/) to convert your `npub` to a `HEX` value
@@ -87,10 +89,10 @@ python3 menu.py
 - [] Add UFW firewall rules
 - [] Improve error handling
 - [] Add unit tests
-- [] Add Wireguard VPN tunnel to connect to node
+- [x] Add support for Wireguard VPN tunnel connect method
 - [] Create Docker container deployment option
 - [] Add option to diable the Nginx setup portion ofthe setup script if user is already running Nginx
-- [] Add response to Nostr client to confirm zap completed succsessfully
+- [x] Add response to Nostr client to confirm zap completed succsessfully
 
 ## Contributing
 
