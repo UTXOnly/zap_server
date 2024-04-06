@@ -1,7 +1,7 @@
 ## Introduction
 A [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) server that allows you recieve zaps on nostr, forwarded to your lightning node running on Tor. This server allows you to create a [Lightning Address](https://github.com/andrerfneves/lightning-address/blob/master/DIY.md) by selecting a username and using your own domain. YOu can run this zap server on a $5 a month VPS, I have included some guides in the additional resouces section of this README to help guide users if need be.
 
-The Zapserver can fetch invoices can fetch invoices over tor or Wireguard VPN tunnel. It is strongly recomended to use a Wireguard VPN tunnel to fetch invoices as tor is very slow to return invoices and the person zapping you will probably not wait around for it. You can create a Wireguard VPN tunnel on your tor node by following:
+The Zapserver can fetch invoices can fetch invoices over tor or Wireguard VPN tunnel. It is strongly recomended to use a Wireguard VPN tunnel to fetch invoices as tor is very slow to return invoices and the person zapping you will probably not wait around for it. You can create a Wireguard VPN tunnel to connect to your tor node by following the [wireguard_setup](https://github.com/UTXOnly/zap_server/blob/wireguard_doc/docs/wireguard_setup.md) doc.
 
 #### Tradeoffs
 * Recieve zaps directly to you lightning node
@@ -13,7 +13,8 @@ The Zapserver can fetch invoices can fetch invoices over tor or Wireguard VPN tu
 
 ## How it works?
 
-![zap_server (2)](https://github.com/UTXOnly/zap_server/assets/49233513/7d3974ce-1510-4bf3-8469-5e31426d24be)
+![zap_server](https://github.com/UTXOnly/zap_server/assets/49233513/566c52c7-23ed-42ea-8f49-657b1f8a795a)
+
 
 
 
