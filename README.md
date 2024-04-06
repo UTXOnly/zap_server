@@ -3,6 +3,8 @@ A [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) server that
 
 The Zapserver can fetch invoices can fetch invoices over tor or Wireguard VPN tunnel. It is strongly recomended to use a Wireguard VPN tunnel to fetch invoices as tor is very slow to return invoices and the person zapping you will probably not wait around for it. You can create a Wireguard VPN tunnel to connect to your tor node by following the [wireguard_setup](https://github.com/UTXOnly/zap_server/blob/wireguard_doc/docs/wireguard_setup.md) doc.
 
+Zapserver also supports creating [kind 9735 zap receipt events](https://github.com/nostr-protocol/nips/blob/master/57.md#appendix-e-zap-receipt-event) and will send that event to all relays listed in the zap request.
+
 #### Tradeoffs
 * Recieve zaps directly to you lightning node
   * Custody your own sats and don't need to worry about sweeping them from a custodial wallet or getting rug pulled by a custodian
